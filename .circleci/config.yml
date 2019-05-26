@@ -31,14 +31,15 @@ jobs:
           command: |
             gem update --system
             gem install bundler
+            bundle exec bundle install
       - save_cache:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
       # Database setup
-      - run: rails db:create
-      - run: rails db:schema:load
+      - run: bundle exec rails db:create
+      - run: bundle exec rails db:schema:load
 
       # run tests!
       - run:
