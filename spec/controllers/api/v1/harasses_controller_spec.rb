@@ -19,7 +19,10 @@ RSpec.describe Api::V1::HarassesController, type: :request do
     end
   end
 
-  describe 'GET /api/v1/harass/:id' do
-
+  describe 'POST /api/v1/harasses' do
+    it 'POST successfully' do
+      post '/api/v1/harasses', params: { harass: {start_address: "Akazienstr.11, Berlin", happened_at: Date.today, description: "A creepy follow"} }
+      expect(response).to have_http_status(200)
+    end
   end
 end

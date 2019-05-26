@@ -18,7 +18,7 @@ module Api::V1
     def create
       @harass = Harass.new(harass_params)
       if @harass.save
-        render json: @harass, status: "Created"
+        render json: { status: 'OK', message: 'created harass case', harass: @harass }
       else
         render json: @harass.errors, status: :unprocessable_entity
       end
@@ -38,7 +38,7 @@ module Api::V1
       end
 
       def harass_params
-        params.require(:harass).permit(:start_address, :description, :longitude, :latitude, :happened_at)
+        params.permit(:start_address, :description, :longitude, :latitude, :happened_at)
       end
 
       def serializer
