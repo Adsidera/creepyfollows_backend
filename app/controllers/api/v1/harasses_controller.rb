@@ -34,11 +34,11 @@ module Api::V1
 
     private
       def set_harass
-        @harass ||= Harass.fin(params[:id])
+        @harass ||= Harass.find(params[:id])
       end
 
       def harass_params
-        params.permit(:start_address, :description, :longitude, :latitude, :happened_at)
+        params.require(:harass).permit(:start_address, :description, :longitude, :latitude, :happened_at)
       end
 
       def serializer
