@@ -17,7 +17,7 @@ module Api::V1
 
     def create
       @harass = Harass.new(harass_params)
-      if @harass.save
+      if @harass.save!
         render json: { status: 'OK', message: 'created harass case', harass: @harass }
       else
         render json: @harass.errors, status: :unprocessable_entity
