@@ -3,7 +3,7 @@ module Api::V1
     before_action :set_harass, only: [:update, :show, :edit]
 
     def index
-      @harasses = Harass.all
+      @harasses = Harass.order(created_at: :desc)
       render json: serializer.new(@harasses)
     end
 
