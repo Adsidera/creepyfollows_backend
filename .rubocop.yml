@@ -1,4 +1,5 @@
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.6
   Exclude:
     - "db/**/*"
@@ -9,7 +10,7 @@ AllCops:
 Bundler/OrderedGems:
   Enabled: false
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: false
 
 Layout/BlockAlignment:
@@ -18,14 +19,14 @@ Layout/BlockAlignment:
 Layout/IndentationWidth:
   Enabled: false
 
+Layout/LineLength:
+  Max: 120
+
 Lint/UselessAssignment:
   Enabled: false
 
 Metrics/BlockLength:
   Max: 30
-
-Metrics/LineLength:
-  Max: 120
 
 Metrics/MethodLength:
   Max: 15

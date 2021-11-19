@@ -5,6 +5,6 @@ class HarassSerializer
   attributes :start_address, :description, :longitude, :latitude, :created_at, :when
 
   attribute :when do |object|
-    object.happened_at.strftime("%d %b %Y") if object.happened_at
+    object.happened_at&.strftime("%d %b %Y")
   end
 end

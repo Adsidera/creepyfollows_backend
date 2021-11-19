@@ -33,16 +33,17 @@ module Api::V1
     end
 
     private
-      def set_harass
-        @harass ||= Harass.find(params[:id])
-      end
 
-      def harass_params
-        params.require(:harass).permit(:start_address, :description, :longitude, :latitude, :happened_at)
-      end
+    def set_harass
+      @harass ||= Harass.find(params[:id])
+    end
 
-      def serializer
-        HarassSerializer
-      end
+    def harass_params
+      params.require(:harass).permit(:start_address, :description, :longitude, :latitude, :happened_at)
+    end
+
+    def serializer
+      HarassSerializer
+    end
   end
 end
