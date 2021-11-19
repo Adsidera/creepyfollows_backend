@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:2.4.1-node-browsers
+      - image: circleci/ruby:2.7.4-node-browsers
         environment:
           RAILS_ENV: test
           PGHOST: 127.0.0.1
@@ -41,19 +41,8 @@ jobs:
             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
       - run:
-          name: install psql
-          command: |
-            sudo rm /etc/apt/sources.list
-            echo "deb http://archive.debian.org/debian/ jessie-backports main" | sudo tee -a /etc/apt/sources.list
-            echo "deb-src http://archive.debian.org/debian/ jessie-backports main" | sudo tee -a /etc/apt/sources.list
-            echo "Acquire::Check-Valid-Until false;" | sudo tee -a /etc/apt/apt.conf.d/10-nocheckvalid
-            echo 'Package: *\nPin: origin "archive.debian.org"\nPin-Priority: 500' | sudo tee -a /etc/apt/preferences.d/10-archive-pin
-            sudo apt-get update
-            sudo apt-get install -y postgresql-client
-
-      - run:
-          name: Wait for db
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          name: install postgres-client
+          command: sudo apt install -y postgresql-client || true
 
       - save_cache:
           paths:
