@@ -21,5 +21,5 @@ streets2 = ["Karl-Liebknecht-Straße, Berlin",
 "Siegesallee, Berlin"]
 
 streets2.each do |street|
-  Harass.create(start_address: street, description: Faker::Lorem.sentence , happened_at: Faker::Time.between(2.days.ago, Date.today, :evening))
+  Harass.create(start_address: street, description: Faker::Lorem.sentence , happened_at: Faker::Time.between_dates(from: 2.days.ago, to: Date.today, period: :evening) )
 end
