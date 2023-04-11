@@ -2,13 +2,13 @@ version: '2.1'
 jobs:
   build:
     docker:
-      - image: cimg/ruby:3.1-node
+      - image: cimg/ruby:3.1.2
     steps:
       - checkout
       - ruby/install-deps
   checking:
     docker:
-      - image: cimg/ruby:3.1-node
+      - image: cimg/ruby:3.1.2
     steps:
       - checkout
       - ruby/install-deps
@@ -17,7 +17,7 @@ jobs:
           label: Inspecting with Rubocop
   test:
     docker:
-      - image: cimg/ruby:3.1-node
+      - image: cimg/ruby:3.1.2
       - environment:
           POSTGRES_DB: creepyfollows_backend_test
           POSTGRES_PASSWORD: ''
