@@ -1,70 +1,132 @@
+version: '2.1'
+orbs:
+  node: circleci/node@18.12
+  ruby: circleci/ruby@3.1
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:3.1-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      - node/install-packages:
+          cache-key: yarn.lock
+          pkg-manager: yarn
+  checking:
+    docker:
+      - image: cimg/ruby:3.1-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      - ruby/rubocop-check:
+          format: progress
+          label: Inspecting with Rubocop
+  test:
+    docker:
+      - image: cimg/ruby:3.1-node
+      - environment:
+          POSTGRES_DB: creepyfollows_backend_test
+          POSTGRES_PASSWORD: ''
+          POSTGRES_USER: root
+        image: circleci/postgres:9.6-alpine
+    environment:
+      BUNDLE_JOBS: '3'
+      BUNDLE_RETRY: '3'
+      PGHOST: 127.0.0.1
+      PGPASSWORD: ''
+      PGUSER: root
+      RAILS_ENV: test
+    parallelism: 3
+    steps:
+      - checkout
+      - ruby/install-deps
+      - node/install-packages:
+          cache-key: yarn.lock
+          pkg-manager: yarn
+      - run:
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          name: Wait for DB
+      - run:
+          command: bundle exec rails db:schema:load --trace
+          name: Database setup
+      - ruby/rspec-test:
+          include: spec/**/*_spec.rb
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - checking
+      - test:
+          requires:
+            - build
+
 # Ruby CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-ruby/ for more details
 #
-version: 2
-jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/ruby:3.1.2-node-browsers
-        environment:
-          RAILS_ENV: test
-          PGHOST: 127.0.0.1
-          PGUSER: root
+# version: 2
+# jobs:
+#   build:
+#     docker:
+#       # specify the version you desire here
+#       - image: circleci/ruby:3.1.2-node-browsers
+#         environment:
+#           RAILS_ENV: test
+#           PGHOST: 127.0.0.1
+#           PGUSER: root
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: circleci/postgres:9.6.2-alpine
-        environment:
-          POSTGRES_USER: root
-          POSTGRES_DB: api_community_test
+#       # Specify service dependencies here if necessary
+#       # CircleCI maintains a library of pre-built images
+#       # documented at https://circleci.com/docs/2.0/circleci-images/
+#       - image: circleci/postgres:9.6.2-alpine
+#         environment:
+#           POSTGRES_USER: root
+#           POSTGRES_DB: api_community_test
 
-    working_directory: ~/repo
+#     working_directory: ~/repo
 
-    steps:
-      - checkout
+#     steps:
+#       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "Gemfile.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+#       # Download and cache dependencies
+#       - restore_cache:
+#           keys:
+#             - v1-dependencies-{{ checksum "Gemfile.lock" }}
+#             # fallback to using the latest cache if no exact match is found
+#             - v1-dependencies-
 
-      - run:
-          name: install dependencies
-          command: |
-            gem update --system
-            gem install bundler
-            bundle install --jobs=4 --retry=3 --path vendor/bundle
+#       - run:
+#           name: install dependencies
+#           command: |
+#             gem update --system
+#             gem install bundler
+#             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
-      - run:
-          name: install postgres-client
-          command: sudo apt install -y postgresql-client || true
+#       - run:
+#           name: install postgres-client
+#           command: sudo apt install -y postgresql-client || true
 
-      - save_cache:
-          paths:
-            - ./vendor/bundle
-          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+#       - save_cache:
+#           paths:
+#             - ./vendor/bundle
+#           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
 
-      # Database setup
-      - run:
-          name: database setup
-          command: |
-            gem install bundler
-            bundle exec rake db:create
-            bundle exec rake db:migrate
+#       # Database setup
+#       - run:
+#           name: database setup
+#           command: |
+#             gem install bundler
+#             bundle exec rake db:create
+#             bundle exec rake db:migrate
 
-      # run tests!
-      - run:
-          name: run tests and linter
-          command: bundle exec rspec && bundle exec rubocop
+#       # run tests!
+#       - run:
+#           name: run tests and linter
+#           command: bundle exec rspec && bundle exec rubocop
 
-      # collect reports
-      - store_test_results:
-          path: /tmp/test-results
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: test-results
+#       # collect reports
+#       - store_test_results:
+#           path: /tmp/test-results
+#       - store_artifacts:
+#           path: /tmp/test-results
+#           destination: test-results
