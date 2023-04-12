@@ -81,6 +81,6 @@ test:
 production:
   <<: *default
   database: creepy_follows_backend_production
-  username: creepy-follows-backend_production_user
+  username: creepy_follows_backend_production_user
   password: <%= ENV['CREEPY-FOLLOWS-BACKEND_DATABASE_PASSWORD'] %>
   url: <%= ENV['DB_URL'] %>
