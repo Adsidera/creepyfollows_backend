@@ -83,3 +83,4 @@ production:
   database: creepy_follows_backend_production
   username: creepy-follows-backend_production_user
   password: <%= ENV['CREEPY-FOLLOWS-BACKEND_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DB_URL'] %>
