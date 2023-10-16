@@ -1,24 +1,43 @@
-# README
+# Creepyfollows - Backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is the backend logic as api consumed by `creepyfollows_frontend`
 
-Things you may want to cover:
+It is a standard Rails 7 application.
+To run it locally after cloning, just use the standard Rails commands.
 
-* Ruby version
+## Endpoints
 
-* System dependencies
+- `GET /api/v1/` - list of reported creepy follows ('harasses')
+- `POST /api/v1/harasses` - report a creepy follow using the following params:
+    - `start_address`, eg. "Kurfürstendamm 101, Berlin"
+    - `description`, eg. "The person followed me from the train"
+    - `happened_at`, a date "2023-10-17T18:10"
 
-* Configuration
+```json
+{
+    "harass": {
+        "start_address": "Wilhelminenhofstraße 92, Berlin",
+        "happened_at": "2023-10-17T18:10",
+        "description": "A person followed me"
+    }
+}
+```
+Will result in this response.
 
-* Database creation
+```json
+{
+    "status": "OK",
+    "message": "created harass case",
+    "harass": {
+        "id": 23,
+        "start_address": "Wilhelminenhofstraße 92, Berlin",
+        "happened_at": "2023-10-17T18:10:00.000Z",
+        "longitude": 13.5092577,
+        "latitude": 52.462052,
+        "description": "A person followed me",
+        "created_at": "2023-10-16T16:26:39.141Z",
+        "updated_at": "2023-10-16T16:26:39.141Z"
+    }
+}
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
