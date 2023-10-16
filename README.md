@@ -1,4 +1,4 @@
-# Creepyfollows - Backend
+# Creepyfollows
 
 This is the backend logic as api consumed by `creepyfollows_frontend`
 
